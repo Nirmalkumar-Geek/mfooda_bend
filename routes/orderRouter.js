@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createOrder, getOrders, getOrderInfo, updateOrderStatus } = require('../controllers/orderController')
+const { createOrder, getOrders, getOrderInfo, updateOrderStatus, updateRating } = require('../controllers/orderController')
 
 
 router.post("/", (req, res) => {
@@ -67,6 +67,16 @@ router.put('/',(req,res)=>{
 
 })
 
+router.post('/rating', (req, res) => {
+
+    updateRating(req.body.order_id,req.body.rating, req.body.review).then((result) => {
+        return res.status(200).json(result);
+    }).catch((error) => {
+        console.log(error)
+        return res.status(400).json(error);
+    })
+
+})
 
 
 module.exports = router

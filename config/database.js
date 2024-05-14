@@ -6,7 +6,8 @@ const connection_details = {
     host: enviroment.parsed.DB_HOST,
     user: enviroment.parsed.DB_USERNAME,
     password: enviroment.parsed.DB_PASSWORD,
-    port: enviroment.parsed.DB_PORT
+    port: enviroment.parsed.DB_PORT,
+    database: enviroment.parsed.DATABASE_NAME,
     
 }
 
@@ -28,9 +29,5 @@ connection.connect((err) => {
 
 
 })
-
-
-
-
 
 module.exports = connection

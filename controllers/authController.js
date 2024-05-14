@@ -3,14 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const enviroment = require("../config/config");
 
-connection.query("USE esther_mfooda", (err) => {
-    if (err) {
-        throw err.message;
-    } else {
-        console.log("Database selected successfully");
-    }
-});
-
 const verifyUserAccessToken = (token) => {
     const result = { status: null, message: null, error: null };
 

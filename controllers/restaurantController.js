@@ -351,10 +351,9 @@ const delete_restaurant = async (id) => {
     let res = { "status": null, "error": null, "message": null };
 
     try {
+        const result_1 = await new Promise((resolve, reject) => {
 
-        const result = await new Promise((resolve, reject) => {
-
-            const select_query = "DELETE FROM restaurants WHERE restaurant_id = ?"
+            const select_query = "SELECT owner_id FROM restaurants WHERE restaurant_id = ?"
             connection.query(select_query, [id], (err, result) => {
 
                 if (err) reject(err);
@@ -365,14 +364,65 @@ const delete_restaurant = async (id) => {
 
         });
 
-        if (result.affectedRows === 1) {
+        if(result_1.length === 1){
 
-            res.status = "success"
-            res.message = "restaurant successfully deleted"
+            const result_2 = await new Promise((resolve, reject) => {
 
-            return res
+                const select_query = "DELETE FROM restaurants WHERE restaurant_id = ?"
+                connection.query(select_query, [id], (err, result) => {
 
-        } else {
+                    if (err) reject(err);
+                    else resolve(result)
+
+                })
+
+
+            });
+
+            if (result_2.affectedRows === 1) {
+
+                const result_3 = await new Promise((resolve, reject) => {
+
+                    const delete_query = "DELETE FROM d_users WHERE id = ?"
+                    connection.query(delete_query, [result_1[0].owner_id], (err, result) => {
+
+                        if (err) reject(err);
+                        else resolve(result)
+
+                    })
+
+
+                });
+
+                if (result_3.affectedRows === 1){
+
+                    res.status = "success"
+                    res.message = "restaurant successfully deleted"
+
+                    return res
+
+                }else{
+
+                    res.status = "error";
+                    res.message = "failed to delete the owner account";
+
+                    return res;
+
+
+                }
+
+                
+
+            } else {
+
+                res.status = "error";
+                res.message = "invalide restaurant ID";
+
+                return res;
+
+            }
+
+        }else{
 
             res.status = "error";
             res.message = "invalide restaurant ID";
@@ -412,6 +462,8 @@ const get_restaurant_by_owner_id = async (owner_id) =>{
 
 
         });
+
+        
 
         if (result.length === 1) {
 
